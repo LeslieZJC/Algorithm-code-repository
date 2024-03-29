@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+const int N = 110;
+using namespace std;
+struct node
+{
+    double x,y;
+}point1[N],point2[N];
+int judge(struct node &a,struct node &b,struct node &c,struct node &d)
+{
+	//快速排斥实验
+    if(max(a.x,b.x)<min(c.x,d.x) || 
+	   max(c.x,d.x)<min(a.x,b.x) || 
+	   max(a.y,b.y)<min(c.y,d.y) ||
+	   max(c.y,d.y)<min(a.y,b.y) )
+    	return 0;
+
+	//跨立试验
+    double u,v,w,z;
+    u=(c.x-a.x)*(b.y-a.y)-(b.x-a.x)*(c.y-a.y);  //CA×BA
+    v=(d.x-a.x)*(b.y-a.y)-(b.x-a.x)*(d.y-a.y);  //DA×BA
+    w=(a.x-c.x)*(d.y-c.y)-(d.x-c.x)*(a.y-c.y);  //AC×DC
+    z=(b.x-c.x)*(d.y-c.y)-(d.x-c.x)*(b.y-c.y);  //BC×DC
+    return (u*v<=0 && w*z<=0);  //如果两个乘积都<=0，则判断两线段相交
+}
+int main()
+{
+    int n;
+    while(cin>>n&&n)
+    {
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            scanf("%lf%lf%lf%lf",&point1[i].x,&point1[i].y,&point2[i].x,&point2[i].y);
+        }
+        for(int i=0;i<n;i++)
+        {
+            for(int j=i+1;j<n;j++)
+            {
+                if(judge(point1[i],point2[i],point1[j],point2[j]))
+                    ans++;
+            }
+        }
+        cout<<ans<<endl;
+    }
+    return 0;
+}
